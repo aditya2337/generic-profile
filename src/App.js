@@ -10,6 +10,7 @@ import PersonalForm from './components/PersonalForm';
 import AddressForm from './components/AddressForm';
 import EducationForm from './components/EducationForm';
 import ExperienceForm from './components/ExperienceForm';
+import Profile from './components/Profile';
 import './App.css';
 import '../public/stylesheet/form.css';
 
@@ -22,6 +23,7 @@ class App extends Component {
           <Route path='/address' component={AddressForm} />
           <Route path='/education' component={EducationForm} />
           <Route path='/experience' component={ExperienceForm} />
+          <Route path='/profile' component={Profile} />
         </div>
       </Router>
     );

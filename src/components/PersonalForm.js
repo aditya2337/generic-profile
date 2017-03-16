@@ -36,6 +36,10 @@ class PersonalForm extends Component {
       dob: dob.value
     }
     dispatch(submitPersonal(text));
+
+    this.setState({
+      nextForm: true
+    })
   }
 
   render () {
@@ -77,7 +81,7 @@ class PersonalForm extends Component {
 const mapStateToProps = state => {
   const {text} = state;
   return {
-    text
+    text: state
   }
 }
 

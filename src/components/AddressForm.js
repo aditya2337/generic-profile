@@ -1,33 +1,42 @@
 import React, { Component } from 'react';
 import Address from './Address';
 import {  Redirect } from 'react-router-dom';
+import { submitAddress } from '../store/actions';
+import { connect } from 'react-redux';
 
-export default class AddressForm extends Component {
+class AddressForm extends Component {
 
   constructor (props) {
     super(props);
 
     this.state = {
       nextForm : false,
-      text: {
-        presentAddr: null,
-        permanentAddr: null
-      }
+      presentAddr: null,
+      permanentAddr: null
     }
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
-
+    const { permanentAddr, presentAddr } = this.state;
+    const { dispatch } = this.props;
+    const text = { permanentAddr, presentAddr };
+    dispatch(submitAddress(text));
     this.setState({
       nextForm: true
     })
   }
 
   handleAddress = (text) => {
-    if (text.addr === 'Present') {
-      console.log(this.state);
-      // this.setState({ text.presentAddr: text })
+    if (text.title === 'Present') {
+      this.setState({
+        presentAddr: text
+      })
+    }
+    if (text.title === 'Permanent') {
+      this.setState({
+        permanentAddr: text
+      })
     }
   }
 
@@ -42,7 +51,7 @@ export default class AddressForm extends Component {
     return (
       <form id='contact' className='vw-50' method='post' onSubmit={this.handleSubmit}>
         <Address addrTitle='Present' getAddress={this.handleAddress} />
-        <Address addrTitle='Permanent' />
+        <Address addrTitle='Permanent' getAddress={this.handleAddress} />
         <fieldset>
           <button name='submit' type='submit' id='contact-submit' data-submit='...Sending'>Submit</button>
         </fieldset>
@@ -50,3 +59,15 @@ export default class AddressForm extends Component {
     );
   }
 }
+
+
+const mapStateToProps = state => {
+  const {text} = state;
+  return {
+    text: state
+  };
+};
+
+AddressForm = connect(mapStateToProps)(AddressForm);
+
+export default AddressForm;

@@ -1,21 +1,38 @@
-const formData = (state = {text: {}}, action) => {
+const formData = (state = [], action) => {
+  let finalData = {};
   switch (action.type) {
     case 'SUBMIT_PERSONAL':
-      return {
-        text: action.text
-      };
+      finalData.personal = action.text;
+      return [
+        ...state,
+        {
+          text: action.text
+        }
+      ];
     case 'SUBMIT_ADDRESS':
-      return {
-        text: action.text
-      };
+      finalData.address = action.text;
+      return [
+        ...state,
+        {
+          text: action.text
+        }
+      ];
     case 'SUBMIT_EDUCATION':
-      return {
-        text: action.text
-      };
+      finalData.education = action.text;
+      return [
+        ...state,
+        {
+          text: action.text
+        }
+      ];
     case 'SUBMIT_EXPERIENCE':
-      return {
-        text: action.text
-      };
+      finalData.experience = action.text;
+      return [
+        ...state,
+        {
+          text: action.text
+        }
+      ];
     default:
       return state;
   }

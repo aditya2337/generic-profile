@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import Experience from './Experience';
 import {  Redirect } from 'react-router-dom';
+import { submitExperience } from '../store/actions';
+import { connect } from 'react-redux';
 
-export default class ExperienceForm extends Component {
+class ExperienceForm extends Component {
   constructor (props) {
     super(props);
 
     this.state = {
       noOfFields: 0,
       fieldsets: [],
-      nextForm: false
+      nextForm: false,
+      text: []
     };
   }
 
@@ -17,21 +20,39 @@ export default class ExperienceForm extends Component {
     let { fieldsets, noOfFields } = this.state;
     noOfFields++;
     this.setState({
-      fieldsets: fieldsets.concat(noOfFields)
+      fieldsets: fieldsets.concat(noOfFields),
+      noOfFields
     })
   }
 
   onCancelBtnClick = (e) => {
-    let { fieldsets, noOfFields } = this.state;
+    let { fieldsets, noOfFields, text } = this.state;
     noOfFields--;
     fieldsets.pop()
+    text.pop()
     this.setState({
-      fieldsets: fieldsets
+      fieldsets: fieldsets,
+      noOfFields,
+      text
     })
+  }
+
+  handleExperience = (values) => {
+    let { noOfFields, text } = this.state;
+    text[noOfFields] = values;
+    this.setState({
+      text
+    });
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
+    const { text } = this.state;
+    const { dispatch } = this.props;
+    const values = {
+      values: text
+    }
+    dispatch(submitExperience(values));
     this.setState({
       nextForm: true
     })
@@ -39,7 +60,10 @@ export default class ExperienceForm extends Component {
 
   render () {
     const { fieldsets, nextForm } = this.state;
-    const ExperienceFields = fieldsets.map((val, index) => <div className='bt'><Experience key={index} /></div>);
+    const ExperienceFields = fieldsets.map((val, index) =>
+    <div className='bt'>
+      <Experience key={index} getExperience={this.handleExperience} />
+    </div>);
     const cancelButton = (fieldsets.length > 0) ?
     <button type='button' className='fr' onClick={this.onCancelBtnClick}>Cancel</button> :
       <div></div>;
@@ -55,7 +79,7 @@ export default class ExperienceForm extends Component {
         <fieldset>
           <h2>Experience</h2>
         </fieldset>
-        <Experience />
+        <Experience getExperience={this.handleExperience} />
         {ExperienceFields}
         <fieldset>
           <button type='button' onClick={this.onAddBtnClick}>Add</button>
@@ -68,3 +92,14 @@ export default class ExperienceForm extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  const {text} = state;
+  return {
+    text: state
+  };
+};
+
+ExperienceForm = connect(mapStateToProps)(ExperienceForm);
+
+export default ExperienceForm;

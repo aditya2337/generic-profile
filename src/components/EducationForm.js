@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import Education from './Education';
 import {  Redirect } from 'react-router-dom';
+import { submitEducation } from '../store/actions';
+import { connect } from 'react-redux';
 
-export default class EducationForm extends Component {
+class EducationForm extends Component {
   constructor (props) {
     super(props);
 
     this.state = {
       noOfFields: 0,
       fieldsets: [],
-      nextForm: false
+      nextForm: false,
+      text:[]
     };
   }
 
@@ -17,21 +20,40 @@ export default class EducationForm extends Component {
     let { fieldsets, noOfFields } = this.state;
     noOfFields++;
     this.setState({
-      fieldsets: fieldsets.concat(noOfFields)
+      fieldsets: fieldsets.concat(noOfFields),
+      noOfFields
     })
   }
 
   onCancelBtnClick = (e) => {
-    let { fieldsets, noOfFields } = this.state;
+    let { fieldsets, noOfFields, text } = this.state;
     noOfFields--;
-    fieldsets.pop()
+    fieldsets.pop();
+    text.pop();
     this.setState({
-      fieldsets: fieldsets
+      fieldsets,
+      noOfFields,
+      text
     })
+  }
+
+  handleEducation = (values) => {
+    let { noOfFields, text } = this.state;
+    text[noOfFields] = values;
+    this.setState({
+      text
+    });
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
+
+    const { text } = this.state;
+    const { dispatch } = this.props;
+    const values = {
+      values: text
+    }
+    dispatch(submitEducation(values));
     this.setState({
       nextForm: true
     })
@@ -39,7 +61,10 @@ export default class EducationForm extends Component {
 
   render () {
     const { fieldsets, nextForm } = this.state;
-    const EducationFields = fieldsets.map((val, index) => <div className='bt'><Education key={index} /></div>);
+    const EducationFields = fieldsets.map((val, index) =>
+    <div className='bt'>
+      <Education key={index} getEducation={this.handleEducation} />
+    </div>);
     const cancelButton = (fieldsets.length > 0) ?
     <button type='button' className='fr' onClick={this.onCancelBtnClick}>Cancel</button> :
       <div></div>;
@@ -55,7 +80,7 @@ export default class EducationForm extends Component {
         <fieldset>
           <h2>Education</h2>
         </fieldset>
-        <Education />
+        <Education getEducation={this.handleEducation} />
         {EducationFields}
         <fieldset>
           <button type='button' onClick={this.onAddBtnClick}>Add</button>
@@ -68,3 +93,14 @@ export default class EducationForm extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  const {text} = state;
+  return {
+    text: state
+  };
+};
+
+EducationForm = connect(mapStateToProps)(EducationForm);
+
+export default EducationForm;
