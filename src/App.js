@@ -6,7 +6,10 @@ import {
   Redirect,
   withRouter
 } from 'react-router-dom';
-import Personal from './components/Personal';
+import PersonalForm from './components/PersonalForm';
+import AddressForm from './components/AddressForm';
+import EducationForm from './components/EducationForm';
+import ExperienceForm from './components/ExperienceForm';
 import './App.css';
 import '../public/stylesheet/form.css';
 
@@ -14,7 +17,12 @@ class App extends Component {
   render () {
     return (
       <Router>
-        <Route exact path='/' component={Personal} />
+        <div className='flex items-center justify-center mt3'>
+          <Route exact path='/' component={PersonalForm} />
+          <Route path='/address' component={AddressForm} />
+          <Route path='/education' component={EducationForm} />
+          <Route path='/experience' component={ExperienceForm} />
+        </div>
       </Router>
     );
   }
