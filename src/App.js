@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import {
   BrowserRouter as Router,
-  Route,
-  Link,
-  Redirect,
-  withRouter
+  Route
 } from 'react-router-dom';
 import PersonalForm from './components/PersonalForm';
 import AddressForm from './components/AddressForm';

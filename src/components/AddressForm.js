@@ -21,10 +21,12 @@ class AddressForm extends Component {
     const { permanentAddr, presentAddr } = this.state;
     const { dispatch } = this.props;
     const text = { permanentAddr, presentAddr };
-    dispatch(submitAddress(text));
-    this.setState({
-      nextForm: true
-    })
+    if (permanentAddr.valid && presentAddr.valid) {
+      dispatch(submitAddress(text));
+      this.setState({
+        nextForm: true
+      })
+    }
   }
 
   handleAddress = (text) => {
@@ -62,7 +64,6 @@ class AddressForm extends Component {
 
 
 const mapStateToProps = state => {
-  const {text} = state;
   return {
     text: state
   };

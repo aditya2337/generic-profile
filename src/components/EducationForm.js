@@ -47,16 +47,23 @@ class EducationForm extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-
+    let post = true;
     const { text } = this.state;
     const { dispatch } = this.props;
     const values = {
       values: text
     }
-    dispatch(submitEducation(values));
-    this.setState({
-      nextForm: true
+    text.forEach((val) => {
+      if (!val.valid) {
+        post = false;
+      }
     })
+    if (post) {
+      dispatch(submitEducation(values));
+      this.setState({
+        nextForm: true
+      })
+    }
   }
 
   render () {
@@ -95,7 +102,6 @@ class EducationForm extends Component {
 }
 
 const mapStateToProps = state => {
-  const {text} = state;
   return {
     text: state
   };

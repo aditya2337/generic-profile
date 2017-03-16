@@ -26,3 +26,7 @@
 .vw-50 {
   width: 50vw;
 }
+
+.error {
+  color: red;
+}

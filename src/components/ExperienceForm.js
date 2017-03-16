@@ -47,15 +47,23 @@ class ExperienceForm extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    let post = true;
     const { text } = this.state;
     const { dispatch } = this.props;
     const values = {
       values: text
     }
-    dispatch(submitExperience(values));
-    this.setState({
-      nextForm: true
+    text.forEach((val) => {
+      if (!val.valid) {
+        post = false;
+      }
     })
+    if (post) {
+      dispatch(submitExperience(values));
+      this.setState({
+        nextForm: true
+      })
+    }
   }
 
   render () {
@@ -94,7 +102,6 @@ class ExperienceForm extends Component {
 }
 
 const mapStateToProps = state => {
-  const {text} = state;
   return {
     text: state
   };

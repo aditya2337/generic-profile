@@ -8,8 +8,6 @@ import './index.css';
 
 let store = createStore(formData);
 
-console.log(store.getState());
-
 ReactDOM.render(
   <Provider store={store}>
     <App />

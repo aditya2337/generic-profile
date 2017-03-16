@@ -7,9 +7,15 @@ class PersonalForm extends Component {
 
   constructor (props) {
     super(props);
-
+    const { fname, lname, fatherName, motherName, dob } = this.props;
     this.state = {
-      nextForm : false
+      nextForm : false,
+      fname,
+      lname,
+      fatherName,
+      motherName,
+      dob,
+      width: ''
     }
   }
 
@@ -35,43 +41,65 @@ class PersonalForm extends Component {
       motherName: motherName.value,
       dob: dob.value
     }
-    dispatch(submitPersonal(text));
+    if (this.props.onSubmission) {
+      this.props.onSubmission(text);
+    } else {
+      dispatch(submitPersonal(text));
+      this.setState({
+        nextForm: true
+      })
+    }
+  }
 
+  handleChange = () => {
+    const { fname, lname, fatherName, motherName, dob } = this.refs;
     this.setState({
-      nextForm: true
+      fname: fname.value,
+      lname: lname.value,
+      fatherName: fatherName.value,
+      motherName: motherName.value,
+      dob: dob.value
     })
   }
 
   render () {
     const { nextForm } = this.state;
+    const id = (this.props.onSubmission) ? '' : 'contact';
+    const width = (this.props.onSubmission) ? '' : 'vw-50';
+    const button = (this.props.onSubmission) ?
+      <button onClick={this.handleSubmit}>save</button>
+      :
+      <button name='submit' type='submit' id='contact-submit' data-submit='...Sending'>Submit</button>;
+
     if (nextForm) {
       return (
         <Redirect to='/address' />
       )
     }
+    const { fname, lname, fatherName, motherName, dob } = this.state;
 
     return (
-      <form id='contact' className='vw-50' method='post' onSubmit={this.handleSubmit}>
+      <form id={id} className={width} method='post' onSubmit={this.handleSubmit}>
         <fieldset>
           <h2>Personal Information</h2>
         </fieldset>
         <fieldset>
-          <input placeholder='First name' type='text' ref='fname' required />
+          <input placeholder='First name' type='text' ref='fname' onChange={this.handleChange} value={fname} required />
         </fieldset>
         <fieldset>
-          <input placeholder='Last name' type='text' ref='lname' required />
+          <input placeholder='Last name' type='text' ref='lname' onChange={this.handleChange} value={lname} required />
         </fieldset>
         <fieldset>
-          <input placeholder='Father name' type='text' ref='fatherName' required />
+          <input placeholder='Father name' type='text' ref='fatherName' onChange={this.handleChange} value={fatherName} required />
         </fieldset>
         <fieldset>
-          <input placeholder='Mother name' type='text' ref='motherName' required />
+          <input placeholder='Mother name' type='text' ref='motherName' onChange={this.handleChange} value={motherName} required />
         </fieldset>
         <fieldset>
-          <input placeholder='Date of birth' type='text' ref='dob' onFocus={this._onFocus} onBlur={this._onBlur} required />
+          <input placeholder='Date of birth' type='text' ref='dob' onChange={this.handleChange} value={dob} onFocus={this._onFocus} onBlur={this._onBlur} required />
         </fieldset>
         <fieldset>
-          <button name='submit' type='submit' id='contact-submit' data-submit='...Sending'>Submit</button>
+          {button}
         </fieldset>
       </form>
     );
@@ -79,7 +107,6 @@ class PersonalForm extends Component {
 }
 
 const mapStateToProps = state => {
-  const {text} = state;
   return {
     text: state
   }
